@@ -1,0 +1,64 @@
+---
+title: "test_workshop"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+```{r}
+require("RCurl")
+df <- read.csv(text = getURL("https://raw.githubusercontent.com/BES2016Workshop/reproduciblecodeR/master/iris.csv"))
+
+# structure of the data
+str(df)
+```
+The tidyr package provides functions to fix many of the issues in messy datasets.
+
+gather() takes multiple columns and gathers them into key-value pairs. We can use this to get the species names into rows.
+
+separate() takes one column and separates into multiple columns. We can use this to split the sample number from the measurement type.
+
+spread() takes two columns (a key-value pair) and spreads them into multiple columns. We can use this to get the measurement types to form columns.
+
+```{r}
+require("tidyr")
+df_ordered <- gather(df, key = "species", value= "measure.cm", -measurement)
+df_ordered2 <- separate(df_ordered, col = "measurement", into= c("sample.number","measurement"),sep= "_")
+df_ordered3 <- spread(df_ordered2, key=measurement, value=measure.cm)
+```
+
+```{r}
+require("dplyr")
+summarise_each(tbl(df_ordered3[,3:6]), group_by(df_ordered3,species), mean(),sd())
+```
+
+In a new code chunk in your R Notebook load the broom package with library(broom) and using the lm() and tidy() functions, fit a linear model relating petal length to petal width and 
+output the table of coefficients.
+
+```{r}
+```
+
+In a new code chunk in your R Notebook, load ggplot2 using library(ggplot2) and make a plot of the linear model created in the previous step. Colour the points by species name.
+HINT Loading the cowplot package will change the look of the plots to be more suitable for publication.
+
+```{r}
+```
+
+RStudio cheatsheets: includes ggplot2, RMarkdown, dplyr, tidyr and more
+
+Swirl: tutorials for tidyr, dplyr and much more directly in the R console
+
+Python pandas comparison with R: Python can be quicker than R, and so is particularly useful when you have a large dataset. This website provides a more detailed look at the R language and its many third party libraries as they relate to the python pandas library
+
+Software Carpentry lessons: freely available lessons taught on the Software Carpentry courses. To host or run a workshop also see this site.
+
+Reproducible Research on Coursera: taught by Roger Peng, Jeff Leek and Brian Caffo at Johns Hopkins University
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file).
+
